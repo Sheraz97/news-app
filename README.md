@@ -1,46 +1,142 @@
-# Getting Started with Create React App
+News App - Running in a Docker Container
+This guide provides step-by-step instructions for running the News App project within a Docker container. Docker allows you to containerize the application, ensuring it runs consistently across different environments.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Prerequisites
+Before you begin, ensure you have the following installed on your machine:
 
-## Available Scripts
+Docker:
 
-In the project directory, you can run:
+Download and install Docker from here.
 
-### `npm start`
+Verify the installation by running:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+bash
+Copy
+docker --version
+Project Files:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Ensure you have the following files in your project directory:
 
-### `npm test`
+Dockerfile
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+package.json
 
-### `npm run build`
+src/ (contains your React app code)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Other necessary files (e.g., tsconfig.json, .env, etc.).
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Steps to Run the Project in Docker
+Step 1: Clone the Repository (Optional)
+If you haven't already cloned the repository, run the following command:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+bash
+Copy
+git clone <repository_url>
+cd <project_directory>
+Step 2: Build the Docker Image
+Navigate to the root directory of your project (where the Dockerfile is located) and build the Docker image:
 
-### `npm run eject`
+bash
+Copy
+docker build -t news-app .
+-t news-app: Tags the image with the name news-app.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+.: Specifies the build context (current directory).
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Step 3: Run the Docker Container
+Once the image is built, run the container using the following command:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+bash
+Copy
+docker run -d -p 3000:80 news-app
+-d: Runs the container in detached mode (in the background).
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+-p 3000:80: Maps port 80 inside the container to port 3000 on your local machine.
 
-## Learn More
+news-app: The name of the Docker image to run.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Step 4: Access the Application
+Open your browser and navigate to:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+http://localhost:3000
+You should see your News App running.
+
+Step 5: Stop the Docker Container
+To stop the running container, follow these steps:
+
+Find the Container ID:
+Run the following command to list all running containers:
+
+bash
+docker ps
+Look for the container ID of the news-app image.
+
+Stop the Container:
+Use the container ID to stop the container:
+
+bash
+docker stop <container_id>
+Remove the Container (Optional):
+If you want to remove the container after stopping it, run:
+
+bash
+docker rm <container_id>
+Optional: Using Docker Compose
+If you prefer using Docker Compose, follow these steps:
+
+Create a docker-compose.yml File:
+In the root of your project, create a docker-compose.yml file with the following content:
+
+yaml
+version: "3.8"
+services:
+  app:
+    image: news-app
+    build: .
+    ports:
+      - "3000:80"
+Start the Container:
+Run the following command to start the container:
+
+bash
+docker-compose up
+Stop the Container:
+To stop the container, use:
+
+bash
+docker-compose down
+Troubleshooting
+Docker Build Fails:
+
+Ensure all required files (e.g., package.json, src/) are present in the project directory.
+
+Check for errors in the Dockerfile.
+
+Application Not Accessible:
+
+Verify the container is running:
+
+bash
+docker ps
+Ensure the correct port is mapped (e.g., -p 3000:80).
+
+Environment Variables:
+
+If your app uses environment variables (e.g., API keys), ensure they are passed to the Docker container using the -e flag or a .env file.
+
+Example Commands
+Build and Run:
+
+bash
+docker build -t news-app .
+docker run -d -p 3000:80 news-app
+Stop and Remove:
+
+bash
+docker stop <container_id>
+docker rm <container_id>
+Docker Compose:
+
+bash
+docker-compose up
+docker-compose down
